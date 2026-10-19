@@ -16,7 +16,7 @@ class ForcePlateData:
 	@staticmethod
 	def _read_column(filepath: str, col: int, start_row: int = 0) -> list[float]:
 		arr = []
-		with open(filepath) as f:
+		with open(filepath, encoding="utf-8-sig", newline="") as f:
 			reader = csv.reader(f)
 			for i, row in enumerate(reader):
 				if i < start_row:
