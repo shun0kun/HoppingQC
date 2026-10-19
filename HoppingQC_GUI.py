@@ -100,7 +100,7 @@ def analyze():
 		show_error("File not found.")
 		return
 	if path.suffix.lower() != ".csv":
-		show_error("File must be a CSV file.")
+		show_error("File must be a CSV file")
 		return
 	try:
 		if not is_utf8(path):
@@ -122,33 +122,33 @@ def analyze():
 		if len(time) == 0 or len(time) != len(vgrf_raw):
 			raise ValueError
 	except PermissionError:
-		show_error("Permission denied.")
+		show_error("Permission denied")
 		return
 	except OSError:
-		show_error("Unable to read file.")
+		show_error("Unable to read file")
 		return
 	except (UnicodeError, ValueError, TypeError):
-		show_error("Invalid CSV format.")
+		show_error("Invalid CSV format")
 		return
 
 	# Target frequency処理
 	try:
 		target_freq = float(freq_entry.get())
 	except ValueError:
-		show_error("Target frequency must be a positive number.")
+		show_error("Target frequency must be a positive number")
 		return
 	if not np.isfinite(target_freq) or target_freq <= 0.0:
-		show_error("Target frequency must be a positive number.")
+		show_error("Target frequency must be a positive number")
 		return
 
 	# Tolerance処置
 	try:
 		tolerance = float(tolerance_entry.get())
 	except ValueError:
-		show_error("Tolerance must be a non-negative number.")
+		show_error("Tolerance must be a non-negative number")
 		return
 	if not np.isfinite(tolerance) or tolerance < 0.0:
-		show_error("Tolerance must be a non-negative number.")
+		show_error("Tolerance must be a non-negative number")
 		return
 
 	# 解析
