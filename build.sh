@@ -1,0 +1,1 @@
+python3 -m PyInstaller --onedir --windowed --name HoppingQC HoppingQC_GUI.py

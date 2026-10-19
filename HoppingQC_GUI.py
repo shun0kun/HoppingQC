@@ -8,6 +8,9 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from pathlib import Path
 import tempfile
 
+MINIMUM_REQUIRED_HOPS_NUM = 20
+MEASURED_HOPS_NUM = 10
+
 def is_utf8(filepath: str | Path) -> bool:
 	try:
 		with open(filepath, encoding="utf-8") as f:
@@ -25,8 +28,8 @@ def show_error(msg: str) -> None:
 def show_graph(time: list[float], vgrf: list[float], hops: list[tuple[int, int]]):
 	ax.clear()
 	ax.plot(time, vgrf, color="black", linewidth=1)
-	if len(hops) >= 12:
-		ax.plot(time[hops[4][0]:hops[8][1]+1], vgrf[hops[4][0]:hops[8][1]+1], color="red", linewidth=1)
+	if len(hops) >= MINIMUM_REQUIRED_HOPS_NUM:
+		ax.plot(time[hops[4][0]:hops[4+MEASURED_HOPS_NUM-1][1]+1], vgrf[hops[4][0]:hops[4+MEASURED_HOPS_NUM-1][1]+1], color="red", linewidth=1)
 	ax.tick_params(axis="both", direction="in",length=2, right=False, top=False, left=True, bottom=True, labelbottom=False, labelleft=False)
 	ax.set_ylim(bottom=-100)
 	ax.set_yticks(np.arange(0, max(vgrf) + 500, 500))
@@ -156,9 +159,9 @@ def analyze():
 	result_text.config(state="normal")
 	result_text.delete("1.0", tk.END)
 	result_text.insert(tk.END, f"Number of hops\t\t\t: {num_hops}\n")
-	if num_hops >= 15:
-		freq_list = [0.0] * 5
-		for i in range(5):
+	if num_hops >= MINIMUM_REQUIRED_HOPS_NUM:
+		freq_list = [0.0] * MEASURED_HOPS_NUM
+		for i in range(MEASURED_HOPS_NUM):
 			freq_list[i] = 1 / (time[hops[i+4][1]] - time[hops[i+4][0]])
 		measured_freq = np.mean(freq_list)
 		percent_diff = (abs(measured_freq - target_freq) / target_freq) * 100.0
@@ -173,7 +176,7 @@ def analyze():
 			result_text.insert(tk.END, "KO\n", "red")
 		show_graph(time, vgrf_proc, hops)
 	else:
-		result_text.insert(tk.END, "At least 15 hops are required.\nKO\n", "red")
+		result_text.insert(tk.END, f"At least {MINIMUM_REQUIRED_HOPS_NUM} hops are required.\nKO\n", "red")
 
 	result_text.config(state="disabled")
 
@@ -195,7 +198,7 @@ if __name__ == "__main__":
 	path_label = tk.Label(root, text="CSV file path").place(x=10, y=10)
 	path_entry = tk.Entry(root)
 	path_entry.place(x=155, y=10, width=435, height=28)
-	browse_botton = tk.Button(root, text="Browse...", bg="#555555", activebackground="#333333", command=browse_file)
+	browse_botton = tk.Button(root, text="Browse...", command=browse_file)
 	browse_botton.place(x=600, y=8, width=78, height=28)
 
 	freq_label = tk.Label(root, text="Target frequency (Hz)").place(x=10, y=50)
