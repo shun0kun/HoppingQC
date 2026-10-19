@@ -8,8 +8,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from pathlib import Path
 import tempfile
 
-MINIMUM_REQUIRED_HOPS_NUM = 20
-MEASURED_HOPS_NUM = 10
+MINIMUM_REQUIRED_HOPS_NUM = 15
+MEASURED_HOPS_NUM = 5
 
 def is_utf8(filepath: str | Path) -> bool:
 	try:
